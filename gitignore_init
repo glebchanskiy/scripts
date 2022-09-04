@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cp /Users/glebchanskiy/.config/gitignore_init/conf.gitignore "$(pwd)/.gitignore"
