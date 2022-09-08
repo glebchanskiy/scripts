@@ -14,7 +14,7 @@ mob_obsidian_store_loc="/data/data/com.termux/files/home/storage/downloads/obsid
 obsidian_store_name="obsidian_store"
 
 port=8022
-mob_user="u0_a436"
+mob_user="u0_a257"
 mob_ip="192.168.100.100"
 
 
