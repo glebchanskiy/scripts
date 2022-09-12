@@ -1,0 +1,52 @@
+#!/bin/bash
+
+output_file=out.txt
+search='*'
+dir=.
+depth='-maxdepth 1'
+
+while getopts 'o:s:d:r' flag 
+do
+	case "${flag}" in
+	r) 
+		depth=""
+		;;
+	o)
+		output_file=${OPTARG}
+		;;
+	s)	
+		search=${OPTARG}
+		;;
+	d)
+		dir=${OPTARG}
+		;;
+	*)
+		print_usage
+		exit 1
+		;;
+	esac
+done
+
+# echo output: $output_file
+# echo search: $search
+# echo dir: $dir
+# echo recursive: $recursive
+
+# if [ $recursive = true ];
+# then
+# 	for file in `find $dir -type f -name "*$search"`
+# 	do
+# 		echo $file;
+# 	done > $output_file
+# else 
+# 	for file in `find $dir -maxdepth 1 -type f -name "*$search"`
+# 	do
+# 		echo $file;
+# 	done > $output_file
+# fi
+for file in `find $dir $depth -type f -name "*$search"`
+do
+	echo $file;
+done > $output_file
+
+
