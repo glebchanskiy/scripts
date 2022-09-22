@@ -4,13 +4,12 @@ mac_pass_store_loc="/Users/glebchanskiy"
 mob_pass_store_loc="/data/data/com.termux/files/home"
 pass_store_name=".password-store"
 
-# update media
 mac_media_store_loc="/Users/glebchanskiy/Pictures"
 mob_media_store_loc="/data/data/com.termux/files/home/storage/pictures"
 media_store_name="media_store"
 
 mac_obsidian_store_loc="/Users/glebchanskiy/Documents"
-mob_obsidian_store_loc="/data/data/com.termux/files/home/storage/downloads/obsidian"
+mob_obsidian_store_loc="/data/data/com.termux/files/home/storage/downloads"
 obsidian_store_name="obsidian_store"
 
 port=8022
@@ -18,13 +17,12 @@ mob_user="u0_a257"
 mob_ip="192.168.100.100"
 
 
-
 print_usage() {
   echo "Usage: `basename "$0"` [-p|-m|-o] [-h 'ip'] [-d 'device']"
   echo "	-p	update pass store"
   echo "	-m	update media store"
   echo "	-o	update obsidian store"
-  echo " "
+  echo
   echo "	-h	host ip (default:$mob_ip)"
   echo "	-d	which device to update [mac-to-mob|mob-to-mac]"
 }
@@ -78,12 +76,6 @@ if [ "$type_update" = "mac-to-mob" ]; then
 		scp -r -P $port "$mac_path/$store_name" "$host:$mob_path" || echo "mac to mob update failure"
 elif [ "$type_update" = "mob-to-mac" ]; then
 		scp -r -P $port "$host:$mob_path/$store_name" $mac_path || echo "mob to mac update failure"
-# elif [ "$type_update" = "all" ]; then
-# 		echo "full update"
-# 		scp -r -P $port "$mac_path/$store_name" "$host:$mob_path" || echo "to mobile update failure"
-# 		scp -r -P $port "$host:$mob_path/$store_name" $mac_path || echo "to mac update failure"
 else
 		echo "unknown option: $type_update"
 fi
-
-
