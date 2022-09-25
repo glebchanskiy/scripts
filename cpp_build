@@ -1,0 +1,55 @@
+#!/bin/bash
+
+print_message() {
+	echo "======================= [ $1 ]"
+}
+
+check() {
+	if [ $? -eq 0 ]; then
+		echo $1: OK
+	else
+		echo $1: ERROR $?
+		exit 1
+	fi
+}
+
+build() {
+	if [ -d "$build_dir" ];
+	then 
+		print_message "CLEAN"
+		rm -rf "$build_dir"
+	fi
+
+	mkdir $build_dir
+	cd $build_dir
+
+	print_message "CMAKE"
+	cmake ../CMakeLists.txt
+	check "CMAKE"
+
+	print_message "MAKE"
+	make
+	check "MAKE"
+
+	print_message "EXECUTING"
+}
+
+
+build_dir=build
+target=methods_types
+
+
+if [ $1 ]
+then 
+	build_dir=$1
+fi
+
+
+if [ -e CMakeLists.txt ]
+then 
+	build
+	./$target
+else
+	echo "CMakeLists.txt dosn\`t exist"
+fi 
+
