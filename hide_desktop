@@ -1,0 +1,28 @@
+#!/bin/bash
+
+usage() {
+	echo "usage: $(basename $0) [--hide|--show]"
+}
+
+# if no arguments are provided, return usage function
+if [ $# -eq 0 ]; then
+    usage
+    exit 1
+fi
+
+
+for arg in "$@"; do
+    case $arg in
+    -s | --show)
+		defaults write com.apple.finder CreateDesktop true
+		killall Finder
+		;;
+    -h | --hide)
+        defaults write com.apple.finder CreateDesktop false
+		killall Finder
+		;;
+    *)
+        usage
+        ;;
+    esac
+done
