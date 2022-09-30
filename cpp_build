@@ -36,7 +36,7 @@ build() {
 
 
 build_dir=build
-target=methods_types
+target=untitled
 
 
 if [ $1 ]
@@ -47,9 +47,12 @@ fi
 
 if [ -e CMakeLists.txt ]
 then 
-	build
-	./$target
+	echo "- CMakeLists.txt founded"
 else
-	echo "CMakeLists.txt dosn\`t exist"
+	echo "- CMakeLists.txt dosn\`t exist"
+	echo "- copy CMakeLists.txt from config"
+	cp ~/.config/cpp_build/CMakeLists.txt .
 fi 
 
+build
+./$target
