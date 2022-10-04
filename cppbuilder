@@ -1,0 +1,153 @@
+#!/bin/bash
+
+
+build_dir=build
+target=run_program
+remove_after=1
+
+usage() {
+	echo "usage: $(basename $0) [-dtr] [-h] [--run] [--clean]"
+	echo "-d | --dir       -  build directiry"
+	echo "-t | --target    -  executable program (which in CMakeList)"
+	echo "-r | --remove    -  remove build directory and CMakeList after executing"
+	echo "-h | --help      -  help"
+	echo "     --run       -  executable program"
+	echo "     --clean     -  clean project"
+
+}
+
+print_message() {
+	cols=`tput cols`
+	lines=`tput lines`
+	word_length=${#1}
+	let "word_length = word_length + 6"
+	let "result = (cols - word_length) / 2"
+
+	for ((i=1;i<=$result;i++))
+	do
+		printf "="
+	done
+
+	printf " [ $1 ] "
+
+	for ((i=1;i<=$result;i++))
+	do
+		printf "="
+	done
+
+	if [[ $result%2 -eq 0 ]]; 
+	then 
+		printf "="
+	fi
+
+	printf "\n"
+}
+
+check() {
+	if [ $? -eq 0 ]; then
+		echo $1: OK
+	else
+		echo $1: ERROR $?
+		exit 1
+	fi
+}
+
+remove_build_dir() {
+	if [ -d "$build_dir" ];
+	then 
+		print_message "CLEAN"
+		rm -rf "$build_dir"
+	fi
+}
+
+build() {
+	if [[ -e main.cpp ]];
+	then
+		echo "- main.cpp founded"
+	else
+		echo "- main.cpp not founded"
+		exit 1
+	fi
+
+	if [[ -e CMakeLists.txt ]]
+	then 
+		echo "- CMakeLists.txt founded"
+	else
+		echo "- CMakeLists.txt dosn\`t exist"
+		echo "- copy CMakeLists.txt from config"
+		cp ~/.config/cpp_build/CMakeLists.txt .
+	fi 
+
+	remove_build_dir 	
+
+	mkdir $build_dir
+	cd $build_dir
+
+	print_message "CMAKE"
+	cmake ../CMakeLists.txt
+	check "CMAKE"
+
+	print_message "MAKE"
+	make
+	check "MAKE"
+
+	print_message "EXECUTING"
+
+	./$target
+	cd ..
+}
+
+# if no arguments are provided, return usage function
+# if [ $# -eq 0 ]; then
+#     usage
+#     exit 1
+# fi
+
+
+for arg in "$@"; do
+    case $arg in
+	-h | --help)
+		usage
+		exit 0
+		;;
+    -d | --dir)
+		shift
+		build_dir=$1
+		;;
+	-t | --target)
+		shift 
+		target=$1
+		;;
+	-r | --remove)
+		remove_after=0
+		;;
+	--run)
+		if [[ -d "$build_dir" && "$build_dir/$target" ]];
+		then 
+			cd $build_dir && ./$target
+			exit 0
+		else 
+			echo target don\`t exist
+			exit 1
+		fi
+		;;
+	--clean)
+		remove_build_dir
+		rm CMakeLists.txt
+		exit 0
+		;;
+    *)
+        usage
+		exit 0
+        ;;
+    esac
+done
+
+
+build
+
+if [[ $remove_after -eq 0 ]];
+then 
+	remove_build_dir 
+	rm CMakeLists.txt
+fi

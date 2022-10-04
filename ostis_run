@@ -21,6 +21,10 @@ for arg in "$@"; do
 	-s | --start)
 		./run_sc_server.sh | ./run_scweb.sh
 		;;
+	-h | --help)
+		usage
+		exit 0
+		;;
     *)
         usage
         ;;
