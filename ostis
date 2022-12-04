@@ -1,0 +1,35 @@
+#!/bin/bash
+
+usage() {
+	echo "usage: $(basename $0) [--build-kb] [--build-ps] [--start]"
+}
+
+cd $HOME"/ostis-example-app/scripts/"
+	
+if [ $# -eq 0 ]; then
+    usage
+    exit 1
+fi
+
+for arg in "$@"; do
+    case $arg in
+    --build-kb)
+		./build_kb.sh
+		;;
+	--build-ps)
+		./build_problem_solver.sh
+		;;
+	-s | --start)
+		./run_sc_server.sh | ./run_sc_web.sh
+		exit 0
+		;;
+	-h | --help)
+		usage
+		exit 0
+		;;
+    *)
+        usage
+        ;;
+    esac
+done
+
