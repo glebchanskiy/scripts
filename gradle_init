@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cp -r /Users/glebchanskiy/.config/gradle_init/template/* "$(pwd)/"
